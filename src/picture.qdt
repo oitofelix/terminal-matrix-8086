@@ -1,0 +1,310 @@
+;
+; pictures.qdt -- Art ASCII pictures;
+;
+; Copyright (C) 2015 Bruno FÇlix Rezende Ribeiro <oitofelix@gnu.org>
+;
+; This program is free software; you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation; either version 3, or (at your option)
+; any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;
+
+%push SRC_PICTURE_QDT
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_logo_t_cga
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_logo_t_cga
+%ifndef IMPORTED_picture_logo_t_cga
+%define IMPORTED_picture_logo_t_cga
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+?import cor, GREEN, BLACK
+%include "kernel/video.qdt"
+
+picture_logo_t_cga:
+  array
+    db cor(GREEN,BLACK)
+    row " ‹‹‹‹‹"
+    row "   €   ‹‹‹  ‹‹‹ ‹‹ ‹‹   ‹  ‹‹ ‹  ‹‹‹‹  ‹"
+    row "  €   €˛   €    € € €  €  €  €  €‹‹€  €"
+    row " ﬂ   ﬂﬂﬂ  ﬂ    ﬂ   ﬂ  ﬂ  ﬂ  ﬂ  ﬂ  ﬂ   ﬂﬂ€‹"
+    row "ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ"
+  endarray
+
+%endif ; IMPORTED_picture_logo_t_cga
+%endif ; IMPORT_picture_logo_t_cga
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_logo_m_cga
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_logo_m_cga
+%ifndef IMPORTED_picture_logo_m_cga
+%define IMPORTED_picture_logo_m_cga
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+picture_logo_m_cga:
+  array
+    db cor(LIGHT_GREEN,BLACK)
+    row "…ª  …ÀƒƒÀÕÕª …ÕÀÕÀƒƒÀÕÕÕª   ÕÀÕƒƒÕÕª …ÕÕ"
+    row "∫»ÀÀº∫  ÃÕÕπ   ∫    ∫ …Õº    ∫     ÃŒπ  "
+    row "            ƒƒƒ       »ÕÕŒƒƒÕ Õ  ÕÕº »ÕÕ"
+  endarray
+
+%endif ; IMPORTED_picture_logo_m_cga
+%endif ; IMPORT_picture_logo_m_cga
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_logo_t_ega
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_logo_t_ega
+%ifndef IMPORTED_picture_logo_t_ega
+%define IMPORTED_picture_logo_t_ega
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+?import cor, GREEN, BLACK
+%include "kernel/video.qdt"
+
+picture_logo_t_ega:
+  array
+    db cor(GREEN,BLACK)
+    row "  ‹‹‹‹‹"
+    row "    €   ‹‹‹   ‹‹‹  ‹‹ ‹‹    ‹   ‹‹  ‹   ‹‹‹‹  ‹"
+    row "   €   €‹    €  €  € € €   €   € € €   €‹‹€  €"
+    row "  €   €     €     €   €   €   €   €   €  €  €  ‹‹‹"
+    row " ﬂ    ﬂﬂﬂ  ﬂ     ﬂ   ﬂ   ﬂ   ﬂ   ﬂ   ﬂ  ﬂ   ﬂﬂﬂ  €€"
+    row "ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ"
+  endarray
+
+%endif ; IMPORTED_picture_logo_t_ega
+%endif ; IMPORT_picture_logo_t_ega
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_logo_m_ega
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_logo_m_ega
+%ifndef IMPORTED_picture_logo_m_ega
+%define IMPORTED_picture_logo_m_ega
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+picture_logo_m_ega:
+  array
+    db cor(LIGHT_GREEN,BLACK)
+    row "…Õª  …ÕÀƒƒƒÀÕÕÕÕª …ÕÕÀÕÕÀƒƒƒÀÕÕÕÕª    ÕÀÕƒƒƒÕª   …Õ"
+    row "∫ »ª…º ∫   ∫    ∫    ∫      ∫  …Õº     ∫     »ÕÀÕº"
+    row "∫  »º  ∫   ÃÕÕÕÕ∫    ∫      ÃÕÕπ       ∫     …Õ Õª"
+    row "                 ƒƒƒƒ          »ÕÕŒƒƒƒÕ Õ   Õº   »Õ"
+  endarray
+
+%endif ; IMPORTED_picture_logo_m_ega
+%endif ; IMPORT_picture_logo_m_ega
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_logo_t_vga
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_logo_t_vga
+%ifndef IMPORTED_picture_logo_t_vga
+%define IMPORTED_picture_logo_t_vga
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+?import cor, GREEN, BLACK
+%include "kernel/video.qdt"
+
+picture_logo_t_vga:
+  array
+    db cor(GREEN,BLACK)
+    row "  ‹‹‹‹‹‹‹"
+    row "     €   ‹‹‹   ‹‹‹  ‹‹ ‹‹    ‹   ‹‹  ‹   ‹‹‹‹  ‹"
+    row "    €   €     €  €  € € €   €   € € €   €  €  €"
+    row "   €   €€‹   €     € € €   €   €  €€   €‹‹€  €"
+    row "  €   €     €     €   €   €   €   €   €  €  €  ‹‹‹"
+    row " ﬂ    ﬂﬂﬂ  ﬂ     ﬂ   ﬂ   ﬂ   ﬂ   ﬂ   ﬂ  ﬂ   ﬂﬂﬂ  €€"
+    row "ﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂﬂ"
+  endarray
+
+%endif ; IMPORTED_picture_logo_t_vga
+%endif ; IMPORT_picture_logo_t_vga
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_logo_m_vga
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_logo_m_vga
+%ifndef IMPORTED_picture_logo_m_vga
+%define IMPORTED_picture_logo_m_vga
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+picture_logo_m_vga:
+  array
+    db cor(LIGHT_GREEN,BLACK)
+    row "…Õª  …ÕÀƒƒƒƒÀÕÕÕÕª …ÕÕÕÀÕÕÕÀƒƒƒÀÕÕÕª    ÕÀÕƒƒƒÕª     …Õ"
+    row "∫ ∫  ∫ ∫    ∫    ∫     ∫       ∫   ∫     ∫     »ª   …º"
+    row "∫ »ª…º ∫    ∫    ∫     ∫       ∫  …º     ∫      »ÕÀÕº"
+    row "∫  »º  ∫    ÃÕÕÕÕ∫     ∫       ÃÕÕπ      ∫      …Õ Õª"
+    row "∫      ∫    ∫    ∫     ∫       ∫  »ª     ∫     …º   »ª"
+    row "                  ƒƒƒƒƒ            »ŒƒƒƒÕ Õ   Õº     »Õ"
+  endarray
+
+%endif ; IMPORTED_picture_logo_m_vga
+%endif ; IMPORT_picture_logo_m_vga
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_author_cga
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_author_cga
+%ifndef IMPORTED_picture_author_cga
+%define IMPORTED_picture_author_cga
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+picture_author_cga:
+  array
+    row "        .+oyho-         "
+    row "       :ho:oymMh-       "
+    row "      +h  _  _ NMo      "
+    row "     -N/ `.  .` NN:     "
+    row "     hM/   ..   dMh     "
+    row "     oM+  /``\  dMd     "
+    row "     -Mm   yy  :NMd     "
+    row "     yMM: '''' /MMm`    "
+    row "    oMMN/`     /NMM+    "
+    row "  .hmhyo.--  --.hdmNs:  "
+    row " -:+:/-o-:/++/:-o-+oyo+ "
+    row "+`o:.: / `/  /` / :.:o./"
+  endarray
+
+%endif ; IMPORTED_picture_author_cga
+%endif ; IMPORT_picture_author_cga
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_author_ega
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_author_ega
+%ifndef IMPORTED_picture_author_ega
+%define IMPORTED_picture_author_ega
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+picture_author_ega:
+  array
+    row "                 .../ss-.                 "
+    row "               shMMMMMMMMy-               "
+    row "              yNys-/yymNMMNy-             "
+    row "            :ds.      `.oNMMNy-           "
+    row "           :mm-          .mMMMd.          "
+    row "          .yM/ ,,,,   ,,,, dMMMo`         "
+    row "          +MM/ :`o`   `o`: `sMMM-         "
+    row "         -NMM/              +MMMN`        "
+    row "         :MMM/      ..      +MMMM`        "
+    row "         .dMM+    ,mmmm,    +MMMM`        "
+    row "          /MMN-  !  --  !  `oMMMM`        "
+    row "          /MMM-     nn     :NMMMM`        "
+    row "         `sMMMo`    ::     /MMMMM`        "
+    row "         /MMMMM.   mddm    /MMMMM+        "
+    row "        :NMMMMM.   ````    /MMMMMN        "
+    row "       :NMMMMMo+:         :/yMMMMMs       "
+    row "     :hMMMMdys. .+:     /+. +MMMMMMh-     "
+    row "    `ymo+`.:/oh-` -+-.:+. ./hoo:+mmNMN+   "
+    row "  `:/.---oo-`s-:/+s/+o//s+/-//`:s+:/o/h+` "
+    row " -o.-+:N-./  o.  -h`---`N   //  o`/d:/:o/ "
+    row "-y` y: o ./  /.  `+     o   -:  o `+ o+ ++"
+  endarray
+
+%endif ; IMPORTED_picture_author_ega
+%endif ; IMPORT_picture_author_ega
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; picture_author_vga
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_picture_author_vga
+%ifndef IMPORTED_picture_author_vga
+%define IMPORTED_picture_author_vga
+
+?import array, row, endarray
+%include "kernel/memory.qdt"
+
+picture_author_vga:
+  array
+    row "                .+oNNNNMMMMNs.                  "
+    row "               .sMMNsyMMMMMMMNs.                "
+    row "              .sNs..  ...syNMMMNs.              "
+    row "             :md.          .sNMMMN              "
+    row "             mNo             sNMMMm             "
+    row "            sMy               sNMMMy.           "
+    row "           +MMy `:oooo   oooo:`-hMMMs           "
+    row "           dMMy `:`oo     oo`:` yMMMm           "
+    row "           MMMy                 yMMMM           "
+    row "           MMMy                 yMMMM           "
+    row "           hMMy        oo       yMMMM           "
+    row "           +MMMh     oMMMMo     yMMMM           "
+    row "           +MMMh    O  --  O   yMMMMM           "
+    row "           +MMMh      `NN`     yMMMMM           "
+    row "          +NMMMMy     `yy`     yMMMMMs          "
+    row "         -yMMMMMh   `+mmmm+`   yMMMMMNo         "
+    row "        .yMMMMMMh    :hhhh:    yMMMMMMy         "
+    row "       .hMMMMMMd:+-          -+/hMMMMMNo        "
+    row "     .sNMMMMNdh/ `:o-      .+/` yMMMMMMNs.      "
+    row "     hMNms:::.:so  `/o.  .o/`  +soo+sNMMMNhs    "
+    row "   `++/. `.:+/sd+o+.../oo/...+o+dy/+/:+/ommms   "
+    row " `++``/ss+yo  ./  `oN+oooo+No`  :-  +h+ss+`.ms  "
+    row "`m. +o.s+ ::  :y   .N      m-   s+  -: /y.+o`+s "
+    row "N.  h: /- ::  ./   `+      +`   /-  -: ./ -m `oo"
+  endarray
+
+%endif ; IMPORTED_picture_author_vga
+%endif ; IMPORT_picture_author_vga
+
+
+%pop SRC_PICTURE_QDT
+
+; Local Variables:
+; coding: cp437-dos
+; End:

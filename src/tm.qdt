@@ -1,0 +1,1132 @@
+;
+; tm.qdt -- main program;
+;
+; Copyright (C) 2015 Bruno F‚lix Rezende Ribeiro <oitofelix@gnu.org>
+;
+; This program is free software; you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation; either version 3, or (at your option)
+; any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;
+
+%push SRC_TM_QDT
+
+
+%ifndef SRC_TM_QDT
+%define SRC_TM_QDT
+
+CPU 8086
+ORG 100h
+
+%include "qdot/qdot.qdt"
+
+?import boot_sector
+%include "kernel/boot.qdt"
+
+mov sp, 0FFFEh
+mov bp, sp
+
+call main
+
+?import main
+%include "src/tm.qdt"
+
+; Make this program's size a multiple of the sector size (512 bytes)
+; so the boot loader can exactly load it.
+
+times 512 - ($ - $$) % 512 db 0
+
+PROGRAM_END:
+
+?import USERNAME_SIZE, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE
+%include "src/tm.qdt"
+
+SECTION .bss
+  username_buffer resb USERNAME_SIZE + 1
+  password_buffer resb USERNAME_SIZE + 1
+  cover_buffer resb COVER_BUFFER_SIZE + 1
+  cmd_buffer resb COVER_BUFFER_SIZE + 1
+  cmd_args resb COVER_BUFFER_SIZE + 1
+  answer_buffer resb ANSWER_BUFFER_SIZE + 1
+
+
+%endif ; SRC_TM_QDT
+
+
+;;;;;;;
+; main
+;;;;;;;
+
+%ifdef IMPORT_main
+%ifndef IMPORTED_main
+%define IMPORTED_main
+
+?import USERNAME_SIZE, draw_conn_msgs, draw_logo, draw_user_prompt, \
+  read_question, tm_cmdtable, logo_mode_minrow
+%include "src/tm.qdt"
+
+?import random_init
+%include "math/random.qdt"
+
+?import video_init, video_disable_cursor, video_blink_mode, \
+  video_cls, video_draw_str_vhcent, color, GREEN, BLACK, \
+  video_draw_char_hfull, video_setrow_cent, video_setrow, \
+  video_win_maxrow, RED, LIGHT_GREEN, video_next_row, \
+  video_win_minrow, video_row, LIGHT_CYAN, video_select_page
+%include "kernel/video.qdt"
+
+?import memory_uppercase_str, memory_rot47, memory_strlen, \
+  memory_str_char_index, memory_streq, memory_array_len
+%include "kernel/memory.qdt"
+
+?import timer_sleep, timer_seconds2ticks
+%include "kernel/timer.qdt"
+
+?import keyboard_mindelay_maxrate, keyboard_flush_buffer, NOPRINT
+%include "kernel/keyboard.qdt"
+
+?import prompt_read_str_vhcent
+%include "ui/prompt.qdt"
+
+?import progbar_draw_hfull, progbar_draw_r
+%include "ui/progbar.qdt"
+
+?import command_run
+%include "ui/command.qdt"
+
+?import l10n_loading, l10n_user, l10n_password, l10n_access_denied, \
+  l10n_access_granted, l10n_connection_messages, \
+  l10n_welcome_message_0, l10n_welcome_message_1, l10n_questions, \
+  l10n_sending_message, l10n_receiving_message, l10n_ris, l10n_no_answer
+%include L10N_QDT_FILE
+
+?func main
+  ? call, random_init
+  ? call, video_init
+  ? call, timer_sleep, 2
+  ? call, video_disable_cursor
+  ? call, video_blink_mode, TRUE
+  ? call, keyboard_mindelay_maxrate
+
+  ? call, video_select_page, 0
+  ? =, [video_win_color], color(GREEN,BLACK)
+  ? call, video_cls
+  ? call, video_draw_str_vhcent, l10n_loading, bcolor(GREEN,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(5)
+
+  .login: ?while TRUE
+    ? call, video_setrow_cent
+    ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+    ? call, keyboard_flush_buffer
+    ? call, prompt_read_str_vhcent, -1, 0, l10n_user, username_buffer, \
+              USERNAME_SIZE, color(GREEN,BLACK), '*'
+    ? call, prompt_read_str_vhcent, 1, 0, l10n_password, password_buffer, \
+              USERNAME_SIZE, color(GREEN,BLACK), NOPRINT
+    ? call, memory_uppercase_str, username_buffer
+    ? call, memory_rot47, password_buffer
+    ?if ||, ||, !, call, memory_streq, username_buffer, password_buffer, \
+                !=, -1, call, memory_str_char_index, username_buffer, ' ', \
+            >, 3, call, memory_strlen, username_buffer
+      ? call, video_setrow_cent
+      ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+      ? call, video_draw_str_vhcent, l10n_access_denied, bcolor(RED,BLACK)
+      ? call, timer_sleep, timer_seconds2ticks(3)
+    ?else
+      ?break .login
+    ?endif
+  ?endwhile
+
+  ? call, video_setrow_cent
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+  ? call, video_draw_str_vhcent, l10n_access_granted, bcolor(LIGHT_GREEN,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(5)
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+  ? call, timer_sleep, timer_seconds2ticks(1)
+
+  ? call, video_setrow, [video_win_maxrow]
+  ? call, progbar_draw_hfull, timer_seconds2ticks(30), draw_conn_msgs, \
+               l10n_connection_messages, \
+               call, memory_array_len, l10n_connection_messages, 2
+
+  ? call, video_cls
+  ? call, video_draw_str_vhcent, l10n_welcome_message_0, bcolor(RED,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(1)
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+
+  ? call, video_draw_str_vhcent, username_buffer, color(GREEN,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(1)
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+
+  ? call, video_draw_str_vhcent, l10n_welcome_message_1, bcolor(RED,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(1)
+
+  ? call, video_cls
+  ? call, draw_logo
+  ? call, video_next_row
+  ? =, [video_win_minrow], call, video_row
+  ? =, [video_win_rows], inc, -, [video_win_maxrow], [video_win_minrow]
+  ? =, [logo_mode_minrow], [video_win_minrow]
+
+  ?while TRUE
+    ? call, draw_user_prompt
+    ?if ==, 0, call, read_question, answer_buffer, cmd_buffer, \
+                 cover_buffer, l10n_questions, color(GREEN,BLACK)
+      ? call, video_next_row
+    ?elseif ==, 0, call, memory_strlen, answer_buffer
+      ? call, video_next_row
+      ?if !, call, command_run, cmd_args, cmd_buffer, tm_cmdtable
+        ? call, video_draw_str, l10n_no_answer, color(GREEN,BLACK)
+        ? call, video_next_row
+      ?endif
+    ?else
+      ? call, video_next_row
+
+      ; sending
+      ? call, video_draw_str, l10n_sending_message, color(LIGHT_GREEN,BLACK)
+      ? call, progbar_draw_r, 6, timer_seconds2ticks(5), NULL, NULL, 0
+
+      ; receiving
+      ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, 0
+      ? call, video_draw_str, l10n_receiving_message, color(LIGHT_GREEN,BLACK)
+      ? call, progbar_draw_r, 6, timer_seconds2ticks(5), NULL, NULL, 0
+
+      ; response
+      ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, 0
+      ? call, video_draw_str, l10n_ris, color(LIGHT_GREEN,BLACK)
+      ? call, video_draw_str, answer_buffer, color(LIGHT_CYAN,BLACK)
+      ? call, video_next_row
+    ?endif
+  ?endwhile
+?endfunc
+
+%endif ; IMPORTED_main
+%endif ; IMPORT_main
+
+
+;;;;;;;;;;;;;;;;;
+; draw_conn_msgs
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_draw_conn_msgs
+%ifndef IMPORTED_draw_conn_msgs
+%define IMPORTED_draw_conn_msgs
+
+?import video_setrow_cent, video_draw_char_hfull, \
+  video_draw_str_hcent
+%include "kernel/video.qdt"
+
+?import memory_array_elem
+%include "kernel/memory.qdt"
+
+?func draw_conn_msgs, %$array, %$count, %$color
+   ? call, video_setrow_cent
+   ? call, video_draw_char_hfull, ' ', %$color, -1, 1
+   ? call, video_draw_str_vhcent, call, memory_array_elem, %$array, 2, %$count, \
+             %$color
+?endfunc
+
+%endif ; IMPORTED_draw_conn_msgs
+%endif ; IMPORT_draw_conn_msgs
+
+
+;;;;;;;;;;;;
+; draw_logo
+;;;;;;;;;;;;
+
+%ifdef IMPORT_draw_logo
+%ifndef IMPORTED_draw_logo
+%define IMPORTED_draw_logo
+
+?import video_setpos, video_rows, video_draw_char_hfull, color, GREEN, \
+  BLACK, LIGHT_GREEN, video_draw_str_hcent, LIGHT_BLUE, video_next_row
+%include "kernel/video.qdt"
+
+?import memory_strheight
+%include "kernel/memory.qdt"
+
+?import picture_logo_t_cga, picture_logo_m_cga, picture_logo_t_ega, \
+  picture_logo_m_ega, picture_logo_t_vga, picture_logo_m_vga
+%include "src/picture.qdt"
+
+?func draw_logo
+  ? call, video_setpos, 0, 0
+  ?switch [video_rows]
+    ?case ==, 25
+      ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, \
+          dec, +, call, memory_strheight, picture_logo_t_cga, \
+                  call, memory_strheight, picture_logo_m_cga
+      ? call, video_setpos, 0, 0
+      ? call, video_draw_str_hcent, picture_logo_t_cga, color(GREEN,BLACK)
+      ? call, video_next_row
+      ? call, video_draw_str_hcent, picture_logo_m_cga, color(LIGHT_GREEN,BLACK)
+    ?case ==, 43
+      ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, \
+          dec, +, call, memory_strheight, picture_logo_t_ega, \
+                  call, memory_strheight, picture_logo_m_ega
+      ? call, video_setpos, 0, 0
+      ? call, video_draw_str_hcent, picture_logo_t_ega, color(GREEN,BLACK)
+      ? call, video_next_row
+      ? call, video_draw_str_hcent, picture_logo_m_ega, color(LIGHT_GREEN,BLACK)
+    ?case ==, 50
+      ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, \
+          dec, +, call, memory_strheight, picture_logo_t_vga, \
+                  call, memory_strheight, picture_logo_m_vga
+      ? call, video_setpos, 0, 0
+      ? call, video_draw_str_hcent, picture_logo_t_vga, color(GREEN,BLACK)
+      ? call, video_next_row
+      ? call, video_draw_str_hcent, picture_logo_m_vga, color(LIGHT_GREEN,BLACK)
+  ?endswitch
+  ? call, video_next_row
+  ? call, video_draw_char_hfull, 'Ä', color(LIGHT_BLUE,BLACK), 0, 0
+?endfunc
+
+%endif ; IMPORTED_draw_logo
+%endif ; IMPORT_draw_logo
+
+
+;;;;;;;;;;;;;;;;;;;
+; draw_user_prompt
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_draw_user_prompt
+%ifndef IMPORTED_draw_user_prompt
+%define IMPORTED_draw_user_prompt
+
+?import username_buffer
+%include "src/tm.qdt"
+
+?import video_draw_str, color, LIGHT_GREEN, RED, BLACK
+%include "kernel/video.qdt"
+
+?import l10n_user_prompt_left_delimiter, l10n_user_prompt_right_delimiter
+%include L10N_QDT_FILE
+
+?func draw_user_prompt
+  ? call, video_draw_str, l10n_user_prompt_left_delimiter, color(LIGHT_GREEN,BLACK)
+  ? call, video_draw_str, username_buffer, color(RED,BLACK)
+  ? call, video_draw_str, l10n_user_prompt_right_delimiter, color(LIGHT_GREEN,BLACK)
+?endfunc
+
+%endif ; IMPORTED_draw_user_prompt
+%endif ; IMPORT_draw_user_prompt
+
+
+;;;;;;;;;;;;;;;;
+; read_question
+;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_read_question
+%ifndef IMPORTED_read_question
+%define IMPORTED_read_question
+
+?import LOCK_CHAR, tm_lock, COVER_RESISTENCE, COVER_CHAR, \
+COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
+%include "src/tm.qdt"
+
+?import video_enable_cursor, video_prev_col, vide_next_col, \
+  video_draw_char, video_disable_cursor
+%include "kernel/video.qdt"
+
+?import memory_copy_str, END, memory_array_len, memory_array_elem, \
+  memory_uppercase_char
+%include "kernel/memory.qdt"
+
+?import keyboard_flush_buffer_from_char, \
+  keyboard_flush_buffer_from_char_with_resistence, BACKSPACE, RETURN
+%include "kernel/keyboard.qdt"
+
+?import speaker_beep
+%include "kernel/speaker.qdt"
+
+?import random_number
+%include "math/random.qdt"
+
+?import timer_alarm
+%include "kernel/timer.qdt"
+
+?func read_question, %$answer_buffer, %$cmd_buffer, %$cover_buffer, \
+  %$cover_array, %$color
+
+  ?local %$char, %$secret_mode, %$char_count, %$direction, %$i, \
+    %$array, %$cover_array_len, %$string, %$cover_buffer_i, \
+    %$answer_buffer_i, %$cmd_buffer_i
+
+  ? call, video_enable_cursor
+  ? =, %$secret_mode, FALSE
+  ? =, %$char_count, 0
+  ? =, %$direction, 0
+  ? =, %$cover_buffer_i, 0
+  ? =, %$answer_buffer_i, 0
+  ? =, %$cmd_buffer_i, 0
+
+  .read_char: ?while TRUE
+    ? call, timer_alarm, timer_seconds2ticks(90)
+    ?do
+      ? =, %$$$char, call, keyboard_check_char
+      ?if call, timer_alarm, 0
+        ? call, cmd_dcmatrix, NULL
+        ?continue .read_char
+      ?endif
+    ?while ==, %$$$char, -1
+
+    ?switch %$$$char
+
+      ; LOCK CHAR
+      ?case ==, LOCK_CHAR
+        ?if ||, !=, %$$$$char_count, 0, \
+                %$$$$secret_mode
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+        ? =, [tm_lock], !, [tm_lock]
+        ? call, keyboard_flush_buffer_from_char, LOCK_CHAR
+
+      ; COVER CHAR
+      ?case ==, COVER_CHAR
+        ?if [tm_lock]
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+
+        ?if %$$$$secret_mode
+          ? =, %$$$$secret_mode, FALSE
+          ? =, %$$$$direction, 0
+          ? @byte=, +, %$$$$answer_buffer, %$$$$answer_buffer_i, END
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+
+        ?if !=, %$$$$char_count, 0
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+
+        ?if !, call, keyboard_flush_buffer_from_char_with_resistence, \
+          COVER_CHAR, COVER_RESISTENCE
+          ?continue .read_char
+        ?endif
+
+        ? =, %$$$cover_buffer_i, 0
+        ? =, %$$$cover_array_len, call, memory_array_len, %$$$cover_array, 3
+        ?for =, %$$$$i, 0
+          ?cond <, %$$$$i, %$$$$cover_array_len
+          ? =, %$$$$array, call, memory_array_elem, %$$$$cover_array, 3, %$$$$i
+          ? =, %$$$$string, call, memory_array_elem, %$$$$array, 2, \
+                                  call, random_number, 0, \
+                                    dec, call, memory_array_len, %$$$$array, 2
+          ? call, memory_copy_str, +, %$$$$cover_buffer, %$$$$cover_buffer_i, \
+              %$$$$string
+          ? +=, %$$$$cover_buffer_i, call, memory_strlen, %$$$$string
+        ?next ++, %$$$$i
+        ? =, %$$$cover_buffer_i, 0
+        ? =, %$$$secret_mode, TRUE
+        ? call, keyboard_flush_buffer_from_char, COVER_CHAR
+
+      ; BACKSPACE
+      ?case ==, BACKSPACE
+        ?if ==, %$$$$char_count, 0
+          ? call, speaker_beep, 440, 1
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+
+        ?if %$$$$secret_mode
+          ? --, %$$$$cover_buffer_i
+          ? --, %$$$$answer_buffer_i
+        ?else
+          ? --, %$$$$cmd_buffer_i
+        ?endif
+        ? --, %$$$char_count
+
+        ? call, video_prev_col
+        ? call, video_draw_char, ' ', %$$$color, 1
+
+        ?if ==, %$$$$char_count, 0
+          ? =, %$$$$secret_mode, 0
+          ? =, %$$$$direction, 0
+          ? =, %$$$$cover_buffer_i, 0
+          ? =, %$$$$answer_buffer_i, 0
+          ? =, %$$$$cmd_buffer_i, 0
+        ?endif
+        ? drop, call, keyboard_read_char
+
+      ; RETURN
+      ?case ==, RETURN
+        ?if %$$$$secret_mode
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+        ? call, video_disable_cursor
+        ? @byte=, +, %$$$answer_buffer, %$$$answer_buffer_i, END
+        ? @byte=, +, %$$$cmd_buffer, %$$$cmd_buffer_i, END
+        ? drop, call, keyboard_read_char
+        ?return %$$$char_count
+
+      ; PRINT CHAR
+      ?default
+        ?if ==, %$$$$char_count, COVER_BUFFER_SIZE
+          ? call, speaker_beep, 440, 1
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+
+        ? =, %$$$char, call, memory_uppercase_char, %$$$char
+        ?if %$$$$secret_mode
+          ?if ==, %$$$$answer_buffer_i, ANSWER_BUFFER_SIZE - 1
+            ? call, speaker_beep, 440, 1
+            ? drop, call, keyboard_read_char
+            ?continue .read_char
+          ?endif
+          ? @byte=, +, %$$$$answer_buffer, $++, %$$$$answer_buffer_i, %$$$$char
+
+          ?if ==, %$$$$$direction, 0
+            ?if ==, @byte, +, %$$$$$$cover_buffer, %$$$$$$cover_buffer_i, END
+              ? =, %$$$$$$direction, 1
+              ?continue .read_char
+            ?else
+              ? call, video_draw_char, @byte, +, %$$$$$$cover_buffer, \
+                $++, %$$$$$$cover_buffer_i, %$$$$$$color, 1
+              ? call, video_next_col
+              ? ++, %$$$$$$char_count
+              ? drop, call, keyboard_read_char
+            ?endif
+          ?else
+            ?if ==, %$$$$$$char_count, 0
+              ? =, %$$$$$$direction, 0
+              ?continue .read_char
+            ?else
+              ? --, %$$$$$$char_count
+              ? --, %$$$$$$cover_buffer_i
+              ? call, video_prev_col
+              ? call, video_draw_char, ' ', %$$$$$$color, 1
+              ? drop, call, keyboard_read_char
+            ?endif
+          ?endif
+        ?else
+          ? call, video_draw_char, %$$$$char, %$$$$color, 1
+          ? call, video_next_col
+          ? ++, %$$$$char_count
+          ?if ==, 0, %$$$$$answer_buffer_i
+            ? @byte=, +, %$$$$$cmd_buffer, $++, %$$$$$cmd_buffer_i, %$$$$$char
+          ?endif
+          ? drop, call, keyboard_read_char
+        ?endif
+    ?endswitch
+  ?endwhile
+?endfunc
+
+%endif ; IMPORTED_read_question
+%endif ; IMPORT_read_question
+
+
+;;;;;;;;;;;;
+; LOCK_CHAR
+;;;;;;;;;;;;
+
+%ifdef IMPORT_LOCK_CHAR
+%ifndef IMPORTED_LOCK_CHAR
+%define IMPORTED_LOCK_CHAR
+
+LOCK_CHAR equ 0Ch
+
+%endif ; IMPORTED_LOCK_CHAR
+%endif ; IMPORT_LOCK_CHAR
+
+
+;;;;;;;;;;;;
+; logo_mode
+;;;;;;;;;;;;
+
+%ifdef IMPORT_logo_mode
+%ifndef IMPORTED_logo_mode
+%define IMPORTED_logo_mode
+
+logo_mode dw TRUE
+
+%endif ; IMPORTED_logo_mode
+%endif ; IMPORT_logo_mode
+
+
+;;;;;;;;;;;;;;;;;;;
+; logo_mode_minrow
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_logo_mode_minrow
+%ifndef IMPORTED_logo_mode_minrow
+%define IMPORTED_logo_mode_minrow
+
+logo_mode_minrow dw 0000h
+
+%endif ; IMPORTED_logo_mode_minrow
+%endif ; IMPORT_logo_mode_minrow
+
+
+;;;;;;;;;;
+; tm_lock
+;;;;;;;;;;
+
+%ifdef IMPORT_tm_lock
+%ifndef IMPORTED_tm_lock
+%define IMPORTED_tm_lock
+
+tm_lock dw TRUE
+
+%endif ; IMPORTED_tm_lock
+%endif ; IMPORT_tm_lock
+
+
+;;;;;;;;;;;;;;;;;;;
+; COVER_RESISTENCE
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_COVER_RESISTENCE
+%ifndef IMPORTED_COVER_RESISTENCE
+%define IMPORTED_COVER_RESISTENCE
+
+COVER_RESISTENCE equ 22
+
+%endif ; IMPORTED_COVER_RESISTENCE
+%endif ; IMPORT_COVER_RESISTENCE
+
+
+;;;;;;;;;;;;;
+; COVER_CHAR
+;;;;;;;;;;;;;
+
+%ifdef IMPORT_COVER_CHAR
+%ifndef IMPORTED_COVER_CHAR
+%define IMPORTED_COVER_CHAR
+
+COVER_CHAR equ 3Bh
+
+%endif ; IMPORTED_COVER_CHAR
+%endif ; IMPORT_COVER_CHAR
+
+
+;;;;;;;;;;;;;;;;;;;;
+; COVER_BUFFER_SIZE
+;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_COVER_BUFFER_SIZE
+%ifndef IMPORTED_COVER_BUFFER_SIZE
+%define IMPORTED_COVER_BUFFER_SIZE
+
+COVER_BUFFER_SIZE equ 256
+
+%endif ; IMPORTED_COVER_BUFFER_SIZE
+%endif ; IMPORT_COVER_BUFFER_SIZE
+
+
+;;;;;;;;;;;;;;;;;
+; USERNAME_SIZE
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_USERNAME_SIZE
+%ifndef IMPORTED_USERNAME_SIZE
+%define IMPORTED_USERNAME_SIZE
+
+USERNAME_SIZE equ 10
+
+%endif ; IMPORTED_USERNAME_SIZE
+%endif ; IMPORT_USERNAME_SIZE
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; ANSWER_BUFFER_SIZE
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_ANSWER_BUFFER_SIZE
+%ifndef IMPORTED_ANSWER_BUFFER_SIZE
+%define IMPORTED_ANSWER_BUFFER_SIZE
+
+ANSWER_BUFFER_SIZE equ 512
+
+%endif ; IMPORTED_ANSWER_BUFFER_SIZE
+%endif ; IMPORT_ANSWER_BUFFER_SIZE
+
+
+;;;;;;;;;;;;;;;
+; program_name
+;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_program_name
+%ifndef IMPORTED_program_name
+%define IMPORTED_program_name
+
+?import string
+%include "kernel/memory.qdt"
+
+?import cor, LIGHT_GREEN, BLACK, LIGHT_CYAN, CYAN, WHITE
+%include "kernel/video.qdt"
+
+?import l10n_lang
+%include L10N_QDT_FILE
+
+program_name:
+    string cor(LIGHT_GREEN,BLACK), 'Terminal Matrix', cor(LIGHT_CYAN,BLACK), ' 8086', \
+           cor(CYAN,BLACK), ' (TM86) ', cor(WHITE,BLACK), '1.0', ' ', l10n_lang
+
+%endif ; IMPORTED_program_name
+%endif ; IMPORT_program_name
+
+
+;;;;;;;;;;;;;;;
+; program_site
+;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_program_site
+%ifndef IMPORTED_program_site
+%define IMPORTED_program_site
+
+?import string
+%include "kernel/memory.qdt"
+
+?import cor, LIGHT_GRAY, BLACK
+%include "kernel/video.qdt"
+
+program_site:
+    string cor(LIGHT_GRAY,BLACK), 'http://oitofelix.github.io/terminal-matrix-8086/'
+
+%endif ; IMPORTED_program_site
+%endif ; IMPORT_program_site
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; program_build_info
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_program_build_info
+%ifndef IMPORTED_program_build_info
+%define IMPORTED_program_build_info
+
+?import string
+%include "kernel/memory.qdt"
+
+?import cor, LIGHT_MAGENTA, BLACK, MAGENTA, DARK_GRAY, BROWN
+%include "kernel/video.qdt"
+
+program_build_info:
+    string cor(LIGHT_MAGENTA,BLACK), __UTC_DATE__, ' ', \
+           cor(MAGENTA,BLACK), __UTC_TIME__, cor(DARK_GRAY,BLACK), \
+           ' (UTC) ', cor(BROWN,BLACK), 'NASM ', __NASM_VER__
+
+%endif ; IMPORTED_program_build_info
+%endif ; IMPORT_program_build_info
+
+
+;;;;;;;;;;;;;;
+; author_name
+;;;;;;;;;;;;;;
+
+%ifdef IMPORT_author_name
+%ifndef IMPORTED_author_name
+%define IMPORTED_author_name
+
+?import string
+%include "kernel/memory.qdt"
+
+?import cor, YELLOW, BLACK, LIGHT_CYAN
+%include "kernel/video.qdt"
+
+author_name:
+  string cor(YELLOW,BLACK), 'Bruno F‚lix Rezende Ribeiro', \
+         cor(LIGHT_CYAN,BLACK), ' (oitofelix) '
+
+%endif ; IMPORTED_author_name
+%endif ; IMPORT_author_name
+
+
+;;;;;;;;;;;;;;
+; lock_flag
+;;;;;;;;;;;;;;
+
+%ifdef IMPORT_lock_flag
+%ifndef IMPORTED_lock_flag
+%define IMPORTED_lock_flag
+
+?import string
+%include "kernel/memory.qdt"
+
+lock_flag:
+  string '[8F]'
+
+%endif ; IMPORTED_lock_flag
+%endif ; IMPORT_lock_flag
+
+
+;;;;;;;;;;;;;;;;;;;;;;
+; author_contact_info
+;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_author_contact_info
+%ifndef IMPORTED_author_contact_info
+%define IMPORTED_author_contact_info
+
+?import string
+%include "kernel/memory.qdt"
+
+?import cor, BROWN, BLACK, LIGHT_BLUE
+%include "kernel/video.qdt"
+
+author_contact_info:
+  string cor(BROWN,BLACK), 'http://oitofelix.github.io/', ' ', \
+    cor(LIGHT_BLUE,BLACK), 'oitofelix@gnu.org'
+
+%endif ; IMPORTED_author_contact_info
+%endif ; IMPORT_author_contact_info
+
+
+;;;;;;;;;;;;;;
+; tm_cmdtable
+;;;;;;;;;;;;;;
+
+%ifdef IMPORT_tm_cmdtable
+%ifndef IMPORTED_tm_cmdtable
+%define IMPORTED_tm_cmdtable
+
+?import cmd_cls, cmd_ver, cmd_logo, cmd_help, cmd_exit, cmd_rot47, \
+  cmd_dcmatrix
+%include "src/tm.qdt"
+
+?import cmdtable, cmd, endcmdtable
+%include "ui/command.qdt"
+
+tm_cmdtable:
+  cmdtable
+    cmd 'CLS', cmd_cls
+    cmd 'VER', cmd_ver
+    cmd 'LOGO', cmd_logo
+    cmd 'HELP', cmd_help
+    cmd 'EXIT', cmd_exit
+    cmd 'ROT47', cmd_rot47
+    cmd 'DCMATRIX', cmd_dcmatrix
+  endcmdtable
+
+%endif ; IMPORTED_tm_cmdtable
+%endif ; IMPORT_tm_cmdtable
+
+
+;;;;;;;;;;
+; cmd_cls
+;;;;;;;;;;
+
+%ifdef IMPORT_cmd_cls
+%ifndef IMPORTED_cmd_cls
+%define IMPORTED_cmd_cls
+
+?import video_cls
+%include "kernel/video.qdt"
+
+?func cmd_cls, %$cmd_args
+  ? call, video_cls
+?endfunc
+
+%endif ; IMPORTED_cmd_cls
+%endif ; IMPORT_cmd_cls
+
+
+;;;;;;;;;;
+; cmd_ver
+;;;;;;;;;;
+
+%ifdef IMPORT_cmd_ver
+%ifndef IMPORTED_cmd_ver
+%define IMPORTED_cmd_ver
+
+?import program_name, program_site, program_build_info, author_name, \
+  lock_flag, author_contact_info
+%include "src/tm.qdt"
+
+?import picture_author_cga, picture_author_ega, picture_author_vga
+%include "src/picture.qdt"
+
+?import color, BLUE, BLACK, WHITE, DARK_GRAY, LIGHT_RED, video_next_row
+%include "kernel/video.qdt"
+
+?import random_number
+%include "math/random.qdt"
+
+?func cmd_ver, %$cmd_args
+   ?local %$color
+   ? =, %$color, call, random_number, color(BLUE,BLACK), color(WHITE,BLACK)
+
+   ? call, video_draw_str_hcent, program_name, %$color
+   ? call, video_next_row
+   ? call, video_draw_str_hcent, program_site, %$color
+   ? call, video_next_row
+   ? call, video_draw_str_hcent, program_build_info, %$color
+   ? call, video_next_row
+   ? call, video_next_row
+
+   ?switch [video_rows]
+     ?case ==, 25
+       ? call, video_draw_str_hcent, picture_author_cga, %$$color
+     ?case ==, 43
+       ? call, video_draw_str_hcent, picture_author_ega, %$$color
+     ?case ==, 50
+       ? call, video_draw_str_hcent, picture_author_vga, %$$color
+   ?endswitch
+   ? call, video_next_row
+   ? call, video_next_row
+
+   ? call, video_draw_str_hcent, author_name, %$color
+
+   ? call, video_draw_str, lock_flag, ?:, [tm_lock], \
+      color(DARK_GRAY,BLACK), color(LIGHT_RED,BLACK)
+
+   ? call, video_next_row
+   ? call, video_draw_str_hcent, author_contact_info, %$color
+   ? call, video_next_row
+?endfunc
+
+%endif ; IMPORTED_cmd_ver
+%endif ; IMPORT_cmd_ver
+
+
+;;;;;;;;;;;
+; cmd_logo
+;;;;;;;;;;;
+
+%ifdef IMPORT_cmd_logo
+%ifndef IMPORTED_cmd_logo
+%define IMPORTED_cmd_logo
+
+?import logo_mode, logo_mode_minrow, draw_logo
+%include "src/tm.qdt"
+
+?import video_min_winrow, video_win_rows, video_win_maxrow, \
+video_scroll_up_win, video_maxrow, vieo_row, video_scroll_down_win, \
+video_pos, video_setpos, video_next_row
+%include "kernel/video.qdt"
+
+?func cmd_logo, %$cmd_args
+  ?local %$r, %$c, %$dist_to_bottom
+  ?if [logo_mode]
+    ? =, [video_win_minrow], 0
+    ? =, [video_win_rows], inc, -, [video_win_maxrow], [video_win_minrow]
+    ? call, video_scroll_up_win, [logo_mode_minrow]
+  ?else
+    ? =, %$$dist_to_bottom, -, [video_maxrow], call, video_row
+    ?if >, %$$$dist_to_bottom, 0
+      ? call, video_scroll_down_win, min, %$$$dist_to_bottom, [logo_mode_minrow]
+    ?endif
+    ? =, %$$c, =, %$$r, call, video_pos
+    ? call, draw_logo
+    ? call, video_setpos, %$$r, %$$c
+    ? =, [video_win_minrow], [logo_mode_minrow]
+    ? =, [video_win_rows], inc, -, [video_win_maxrow], [video_win_minrow]
+  ?endif
+  ? =, [logo_mode], !, [logo_mode]
+?endfunc
+
+%endif ; IMPORTED_cmd_logo
+%endif ; IMPORT_cmd_logo
+
+
+;;;;;;;;;;;
+; cmd_help
+;;;;;;;;;;;
+
+%ifdef IMPORT_cmd_help
+%ifndef IMPORTED_cmd_help
+%define IMPORTED_cmd_help
+
+?import tm_lock
+%include "src/tm.qdt"
+
+?import video_draw_str_hcent, color, LIGHT_BLUE, BLACK, video_next_row
+%include "kernel/video.qdt"
+
+?import l10n_help_cls, l10n_help_logo, l10n_help_dcmatrix, \
+  l10n_help_rot47, l10n_help_ver, l10n_help_help, l10n_help_exit
+%include L10N_QDT_FILE
+
+?func cmd_help, %$cmd_args
+  ? call, video_draw_str_hcent, l10n_help_cls, color(LIGHT_BLUE,BLACK)
+  ? call, video_next_row
+
+  ? call, video_draw_str_hcent, l10n_help_logo, color(LIGHT_BLUE,BLACK)
+  ? call, video_next_row
+
+  ? call, video_draw_str_hcent, l10n_help_dcmatrix, color(LIGHT_BLUE,BLACK)
+  ? call, video_next_row
+
+  ?if !, [tm_lock]
+    ? call, video_draw_str_hcent, l10n_help_rot47, color(LIGHT_BLUE,BLACK)
+    ? call, video_next_row
+  ?endif
+
+  ? call, video_draw_str_hcent, l10n_help_ver, color(LIGHT_BLUE,BLACK)
+  ? call, video_next_row
+
+  ? call, video_draw_str_hcent, l10n_help_help, color(LIGHT_BLUE,BLACK)
+  ? call, video_next_row
+
+  ? call, video_draw_str_hcent, l10n_help_exit, color(LIGHT_BLUE,BLACK)
+  ? call, video_next_row
+?endfunc
+
+%endif ; IMPORTED_cmd_help
+%endif ; IMPORT_cmd_help
+
+
+;;;;;;;;;;;
+; cmd_exit
+;;;;;;;;;;;
+
+%ifdef IMPORT_cmd_exit
+%ifndef IMPORTED_cmd_exit
+%define IMPORTED_cmd_exit
+
+?import username_buffer, draw_conn_msgs
+%include "src/tm.qdt"
+
+?import prompt_yes_or_no
+%include "ui/prompt.qdt"
+
+?import l10n_prompt_exit, l10n_char_yes, l10n_char_no, \
+  l10n_bye_message_0, l10n_bye_message_1, l10n_disconnection_messages, \
+  l10n_closing, l10n_connection_closed
+%include L10N_QDT_FILE
+
+?import color, GREEN, BLACK, video_next_row, video_win_minrow, \
+  video_win_rows, video_win_maxrow, video_cls, video_draw_str_vhcent, \
+  RED, video_draw_char_hfull, video_setrow, video_setrow_cent, \
+  video_win_color
+%include "kernel/video.qdt"
+
+?import timer_sleep, timer_seconds2ticks,
+%include "kernel/timer.qdt"
+
+?import progbar_draw_hfull
+%include "ui/progbar.qdt"
+
+?import memory_array_len
+%include "kernel/memory.qdt"
+
+?import keyboard_flush_buffer, keyboard_read_char
+%include "kernel/keyboard.qdt"
+
+?import dos_check_if_running, dos_exit
+%include "os/dos.qdt"
+
+?func cmd_exit, %$cmd_args
+  ?if !, call, prompt_yes_or_no, l10n_prompt_exit, l10n_char_yes, \
+    l10n_char_no, l10n_char_no, color(GREEN,BLACK)
+    ? call, video_next_row
+    ?return
+  ?endif
+
+  ? =, [video_win_minrow], 0
+  ? =, [video_win_rows], inc, -, [video_win_maxrow], [video_win_minrow]
+
+  ? call, video_cls
+
+  ? call, video_draw_str_vhcent, l10n_bye_message_0, color(RED,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(1)
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+
+  ? call, video_draw_str_vhcent, username_buffer, color(GREEN,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(1)
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+
+  ? call, video_draw_str_vhcent, l10n_bye_message_1, color(RED,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(2)
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+  ? call, timer_sleep, timer_seconds2ticks(1)
+
+  ? call, video_setrow, [video_win_maxrow]
+  ? call, progbar_draw_hfull, timer_seconds2ticks(30), draw_conn_msgs, \
+               l10n_disconnection_messages, \
+               call, memory_array_len, l10n_disconnection_messages, 2
+
+  ? call, video_setrow_cent
+  ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
+  ? call, video_draw_str_vhcent, l10n_closing, color(RED,BLACK)
+  ? call, timer_sleep, timer_seconds2ticks(5)
+
+  ? call, video_cls
+  ? call, timer_sleep, 10
+  ? call, video_draw_str_vhcent, l10n_connection_closed, color(RED,BLACK)
+
+  ? call, keyboard_flush_buffer
+  ? call, keyboard_read_char
+
+  ?if call, dos_check_if_running
+    ? =, [video_win_color], color(LIGHT_GRAY,BLACK)
+    ? call, video_cls
+    ? call, dos_exit
+  ?endif
+
+  jmp $
+?endfunc
+
+%endif ; IMPORTED_cmd_exit
+%endif ; IMPORT_cmd_exit
+
+
+;;;;;;;;;;;;
+; cmd_rot47
+;;;;;;;;;;;;
+
+%ifdef IMPORT_cmd_rot47
+%ifndef IMPORTED_cmd_rot47
+%define IMPORTED_cmd_rot47
+
+?import memory_array_len, memory_array_elem, memory_rot47
+%include "kernel/memory.qdt"
+
+?import video_draw_str_hcent, video_next_row
+%include "kernel/video.qdt"
+
+?func cmd_rot47, %$cmd_args
+  ?local %$arg
+  ?if <=, 2, call, memory_array_len, %$$cmd_args, 2
+    ? =, %$$arg, call, memory_array_elem, %$$cmd_args, 2, 1
+    ? call, memory_rot47, %$$arg
+    ? call, video_draw_str_hcent, %$$arg, color(WHITE,BLACK)
+    ? call, video_next_row
+  ?endif
+?endfunc
+
+%endif ; IMPORTED_cmd_rot47
+%endif ; IMPORT_cmd_rot47
+
+
+;;;;;;;;;;;;;;;
+; cmd_dcmatrix
+;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_cmd_dcmatrix
+%ifndef IMPORTED_cmd_dcmatrix
+%define IMPORTED_cmd_dcmatrix
+
+?import video_select_page
+%include "kernel/video.qdt"
+
+?import scrnsvr_dcmatrix
+%include "ui/scrnsvr.qdt"
+
+?func cmd_dcmatrix, %$cmd_args
+  ? call, video_select_page, 2
+  ? call, scrnsvr_dcmatrix, FALSE
+  ? call, video_select_page, 0
+?endfunc
+
+%endif ; IMPORTED_cmd_dcmatrix
+%endif ; IMPORT_cmd_dcmatrix
+
+
+%pop SRC_TM_QDT
+
+; Local Variables:
+; coding: cp437-dos
+; End:

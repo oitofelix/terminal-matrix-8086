@@ -1,0 +1,833 @@
+;
+; pt-br.qdt -- Brazilian Portuguese l10n;
+;
+; Copyright (C) 2015 Bruno F‚lix Rezende Ribeiro <oitofelix@gnu.org>
+;
+; This program is free software; you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation; either version 3, or (at your option)
+; any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;
+
+%push L10N_L10N_QDT
+
+
+;;;;;;;;;;;;
+; l10n_lang
+;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_lang
+%ifndef IMPORTED_l10n_lang
+%define IMPORTED_l10n_lang
+
+?import cor, GREEN, BLACK, LIGHT_GRAY, YELLOW
+%include "kernel/video.qdt"
+
+%xdefine l10n_lang cor(LIGHT_GRAY,BLACK), '(', cor(GREEN,BLACK), 'PT', \
+ cor(LIGHT_GRAY,BLACK), '-', cor(YELLOW,BLACK), 'BR', \
+ cor(LIGHT_GRAY,BLACK), ')'
+
+%endif ; IMPORTED_l10n_lang
+%endif ; IMPORT_l10n_lang
+
+
+;;;;;;;;;;;;;;;;;;;
+; l10n_loading
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_loading
+%ifndef IMPORTED_l10n_loading
+%define IMPORTED_l10n_loading
+
+?import bcor, GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_loading:
+  string bcor(GREEN,BLACK), "CARREGANDO"
+
+%endif ; IMPORTED_l10n_loading
+%endif ; IMPORT_l10n_loading
+
+
+;;;;;;;;;;;;;;;;;;;
+; l10n_user
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_user
+%ifndef IMPORTED_l10n_user
+%define IMPORTED_l10n_user
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_user:
+  string cor(LIGHT_GREEN,BLACK), 'USUARIO:'
+
+%endif ; IMPORTED_l10n_user
+%endif ; IMPORT_l10n_user
+
+
+;;;;;;;;;;;;;;;;;;;
+; l10n_password
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_password
+%ifndef IMPORTED_l10n_password
+%define IMPORTED_l10n_password
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_password:
+  string cor(LIGHT_GREEN,BLACK), 'SENHA:'
+
+%endif ; IMPORTED_l10n_password
+%endif ; IMPORT_l10n_password
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; l10n_access_denied
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_access_denied
+%ifndef IMPORTED_l10n_access_denied
+%define IMPORTED_l10n_access_denied
+
+?import bcor, RED, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_access_denied:
+  string bcor(RED,BLACK), "ACESSO NEGADO"
+
+%endif ; IMPORTED_l10n_access_denied
+%endif ; IMPORT_l10n_access_denied
+
+
+;;;;;;;;;;;;;;;;;;;;;;
+; l10n_access_granted
+;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_access_granted
+%ifndef IMPORTED_l10n_access_granted
+%define IMPORTED_l10n_access_granted
+
+?import bcor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_access_granted:
+  string bcor(LIGHT_GREEN,BLACK), "ACESSO PERMITIDO"
+
+%endif ; IMPORTED_l10n_access_granted
+%endif ; IMPORT_l10n_access_granted
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_connection_messages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_connection_messages
+%ifndef IMPORTED_l10n_connection_messages
+%define IMPORTED_l10n_connection_messages
+
+?import string, array, endarray
+%include "kernel/memory.qdt"
+
+l10n_connection_messages:
+  array
+    string "DEFININDO PARAMETROS DE CONEXAO"
+    string "IDENTIFICANDO VIAS DE CONEXAO"
+    string "PROCESSANDO TERMINAIS INDEPENDENTES"
+    string "BUSCANDO SINAL COMPATIVEL"
+    string "ALOCANDO BUFFER DE TRANSFERENCIA"
+    string "INTERPRETANDO SINAL COMUTAL"
+    string "REDIRECIONANDO SISTEMAS INTERPRETATIVOS"
+    string "CONFERINDO PREEMPTIVIDADE"
+    string "ESTABILIZANDO PRIORIDADE DE FLUXO"
+    string "VERIFICANDO FONTES INTERFERENTES"
+    string "CONECTANDO REDE DIRETA"
+  endarray
+
+%endif ; IMPORTED_l10n_connection_messages
+%endif ; IMPORT_l10n_connection_messages
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_welcome_message_0
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_welcome_message_0
+%ifndef IMPORTED_l10n_welcome_message_0
+%define IMPORTED_l10n_welcome_message_0
+
+?import cor, RED, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_welcome_message_0:
+  string cor(RED,BLACK), 'SEJA BEM VINDO'
+
+%endif ; IMPORTED_l10n_welcome_message_0
+%endif ; IMPORT_l10n_welcome_message_0
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_welcome_message_1
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_welcome_message_1
+%ifndef IMPORTED_l10n_welcome_message_1
+%define IMPORTED_l10n_welcome_message_1
+
+?import cor, RED, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_welcome_message_1:
+  string cor(RED,BLACK), 'AO'
+
+%endif ; IMPORTED_l10n_welcome_message_1
+%endif ; IMPORT_l10n_welcome_message_1
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_user_prompt_left_delimiter
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_user_prompt_left_delimiter
+%ifndef IMPORTED_l10n_user_prompt_left_delimiter
+%define IMPORTED_l10n_user_prompt_left_delimiter
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_user_prompt_left_delimiter:
+  string cor(LIGHT_GREEN,BLACK), '<'
+
+%endif ; IMPORTED_l10n_user_prompt_left_delimiter
+%endif ; IMPORT_l10n_user_prompt_left_delimiter
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_user_prompt_right_delimiter
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_user_prompt_right_delimiter
+%ifndef IMPORTED_l10n_user_prompt_right_delimiter
+%define IMPORTED_l10n_user_prompt_right_delimiter
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_user_prompt_right_delimiter:
+  string cor(LIGHT_GREEN,BLACK), '>'
+
+%endif ; IMPORTED_l10n_user_prompt_right_delimiter
+%endif ; IMPORT_l10n_user_prompt_right_delimiter
+
+
+;;;;;;;;;;;;;;;;
+; l10n_char_yes
+;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_char_yes
+%ifndef IMPORTED_l10n_char_yes
+%define IMPORTED_l10n_char_yes
+
+l10n_char_yes equ 'S'
+
+%endif ; IMPORTED_l10n_char_yes
+%endif ; IMPORT_l10n_char_yes
+
+
+;;;;;;;;;;;;;;;;
+; l10n_char_no
+;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_char_no
+%ifndef IMPORTED_l10n_char_no
+%define IMPORTED_l10n_char_no
+
+l10n_char_no equ 'N'
+
+%endif ; IMPORTED_l10n_char_no
+%endif ; IMPORT_l10n_char_no
+
+
+;;;;;;;;;;;;;;;;;;;
+; l10n_prompt_exit
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_prompt_exit
+%ifndef IMPORTED_l10n_prompt_exit
+%define IMPORTED_l10n_prompt_exit
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_prompt_exit:
+  string cor(LIGHT_GREEN,BLACK), 'Tem certeza que deseja desconectar (S/N)?'
+
+%endif ; IMPORTED_l10n_prompt_exit
+%endif ; IMPORT_l10n_prompt_exit
+
+
+;;;;;;;;;;;;;;;;;;;
+; l10n_ris
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_ris
+%ifndef IMPORTED_l10n_ris
+%define IMPORTED_l10n_ris
+
+?import cor, LIGHT_GREEN, BLACK, LIGHT_RED
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_ris:
+  string cor(LIGHT_GREEN, BLACK), '<', cor(LIGHT_RED,BLACK), 'RIS', \
+    cor(LIGHT_GREEN,BLACK), '>'
+
+%endif ; IMPORTED_l10n_ris
+%endif ; IMPORT_l10n_ris
+
+
+;;;;;;;;;;;;;;;;;;;
+; l10n_no_answer
+;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_no_answer
+%ifndef IMPORTED_l10n_no_answer
+%define IMPORTED_l10n_no_answer
+
+?import cor, GREEN, BLACK, bcor, RED
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_no_answer:
+  string cor(GREEN,BLACK), '-', bcor(RED,BLACK), 'SEM RESPOSTA', cor(GREEN,BLACK), '-'
+
+%endif ; IMPORTED_l10n_no_answer
+%endif ; IMPORT_l10n_no_answer
+
+
+;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_sending_message
+;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_sending_message
+%ifndef IMPORTED_l10n_sending_message
+%define IMPORTED_l10n_sending_message
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_sending_message:
+  string cor(LIGHT_GREEN, BLACK), 'ENVIANDO MENSAGEM'
+
+%endif ; IMPORTED_l10n_sending_message
+%endif ; IMPORT_l10n_sending_message
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_receiving_message
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_receiving_message
+%ifndef IMPORTED_l10n_receiving_message
+%define IMPORTED_l10n_receiving_message
+
+?import cor, LIGHT_GREEN, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_receiving_message:
+  string cor(LIGHT_GREEN, BLACK), 'RECEBENDO MENSAGEM'
+
+%endif ; IMPORTED_l10n_receiving_message
+%endif ; IMPORT_l10n_receiving_message
+
+
+;;;;;;;;;;;;;;;;;
+; l10n_questions
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_questions
+%ifndef IMPORTED_l10n_questions
+%define IMPORTED_l10n_questions
+
+?import string, array, endarray
+%include "kernel/memory.qdt"
+
+l10n_questions:
+  array
+
+    array
+      string 'RIS'
+    endarray
+
+    array
+      string ', POR FAVOR, '
+      string ', POR GENTILEZA, '
+      string ', POR PRESTIMO, '
+      string ', POR PRESTATIVIDADE, '
+      string ', POR OBSEQUIO, '
+      string ', POR CORTESIA, '
+      string ', POR BENEVOLENCIA, '
+      string ', POR SUA GRACA, '
+      string ', POR DADIVA, '
+      string ', POR BENESSE, '
+      string ', POR BONDADE, '
+      string ', POR AFEICAO, '
+      string ', POR CARIDADE, '
+      string ', POR BOA VONTADE, '
+      string ', POR ALTRUISMO, '
+      string ', POR COOPERATIVIDADE, '
+      string ', POR DEVOCAO, '
+
+      string ', PARA NOS AJUDAR, '
+      string ', PARA NOS ILUMINAR, '
+
+      string ', ENCARECIDAMENTE, '
+      string ', GENTILMENTE, '
+      string ', AMIGAVELMENTE, '
+      string ', AMISTOSAMENTE, '
+      string ', RESPEITOSAMENTE, '
+      string ', GRACIOSAMENTE, '
+      string ', POLIDAMENTE, '
+      string ', EDUCADAMENTE, '
+      string ', SINCERAMENTE, '
+      string ', AFORTUNADAMENTE, '
+      string ', SERIAMENTE, '
+
+      string ', COM GENTILEZA, '
+      string ', COM RESPEITO, '
+      string ', COM GRACA, '
+      string ', COM POLIDEZ, '
+      string ', COM EDUCACAO, '
+      string ', COM SINCERIDADE, '
+      string ', COM FORTUNIO, '
+      string ', COM SERIEDADE, '
+    endarray
+
+    array
+      string 'NOS '
+    endarray
+
+    array
+      string 'GOSTARIAMOS DE '
+      string 'ADORARIAMOS '
+      string 'APRECIARIAMOS '
+      string 'SOLICITAMOS '
+      string 'REQUERIMOS '
+      string 'REQUISITAMOS '
+      string 'QUEREMOS '
+      string 'DEMANDAMOS '
+      string 'BUSCAMOS '
+      string 'IMPLORAMOS '
+      string 'ROGAMOS '
+      string 'SUPLICAMOS '
+    endarray
+
+    array
+      string 'SABER '
+      string 'CONHECER '
+      string 'ENTENDER '
+      string 'CONTEMPLAR '
+      string 'OUVIR '
+      string 'ESCUTAR '
+      string 'NOS CONSCIENTIZAR '
+      string 'ABORDAR '
+    endarray
+
+    array
+      string 'PLENAMENTE '
+      string 'SINCERAMENTE '
+      string 'ATENCIOSAMENTE '
+      string 'HUMILDEMENTE '
+      string 'DEDICADAMENTE '
+      string 'COMPROMETIDAMENTE '
+    endarray
+
+    array
+      string 'A RESPEITO DA '
+      string 'COM RELACAO A '
+      string 'SOBRE A '
+    endarray
+
+    array
+      string 'QUESTAO '
+      string 'PERGUNTA '
+      string 'INQUISICAO '
+      string 'PONDERACAO '
+      string 'DUVIDA '
+      string 'PROPOSICAO '
+      string 'REFLEXAO '
+      string 'DELIBERACAO '
+    endarray
+
+    array
+      string 'QUE '
+    endarray
+
+    array
+      string 'ESCREVEMOS '
+      string 'EXPOMOS '
+      string 'COLOCAMOS '
+      string 'APONTAMOS '
+      string 'DEFINIMOS '
+      string 'SOLETRAMOS '
+      string 'FAZEMOS '
+      string 'EXIBIMOS '
+      string 'REPORTAMOS '
+      string 'CRIAMOS '
+      string 'ENUNCIAMOS '
+      string 'APRESENTAMOS '
+      string 'PROPOMOS '
+    endarray
+
+    array
+      string 'A SEGUIR, '
+    endarray
+
+    array
+      string 'COM A SUA '
+    endarray
+
+    array
+      string 'PERMISSAO - '
+      string 'CIENCIA - '
+      string 'CONCESSAO - '
+      string 'LICENCA - '
+      string 'AUTORIDADE - '
+      string 'AUTORIZACAO - '
+      string 'APROVACAO - '
+      string 'DEIXA - '
+      string 'ACEITACAO - '
+      string 'SANCAO - '
+    endarray
+
+  endarray
+
+%endif ; IMPORTED_l10n_questions
+%endif ; IMPORT_l10n_questions
+
+
+;;;;;;;;;;;;;;;;
+; l10n_help_cls
+;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_cls
+%ifndef IMPORTED_l10n_help_cls
+%define IMPORTED_l10n_help_cls
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_cls:
+  string cor(LIGHT_BLUE,BLACK), 'CLS', \
+         cor(LIGHT_GRAY,BLACK), ' limpa a tela'
+
+%endif ; IMPORTED_l10n_help_cls
+%endif ; IMPORT_l10n_help_cls
+
+
+;;;;;;;;;;;;;;;;;
+; l10n_help_logo
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_logo
+%ifndef IMPORTED_l10n_help_logo
+%define IMPORTED_l10n_help_logo
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_logo:
+  string cor(LIGHT_BLUE,BLACK), 'LOGO', \
+         cor(LIGHT_GRAY,BLACK), ' esconde/mostra logo'
+
+%endif ; IMPORTED_l10n_help_logo
+%endif ; IMPORT_l10n_help_logo
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; l10n_help_dcmatrix
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_dcmatrix
+%ifndef IMPORTED_l10n_help_dcmatrix
+%define IMPORTED_l10n_help_dcmatrix
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_dcmatrix:
+  string cor(LIGHT_BLUE,BLACK), 'DCMATRIX', \
+         cor(LIGHT_GRAY,BLACK), ' exibe c¢digo da Matrix em decimal'
+
+%endif ; IMPORTED_l10n_help_dcmatrix
+%endif ; IMPORT_l10n_help_dcmatrix
+
+
+;;;;;;;;;;;;;;;;;;
+; l10n_help_rot47
+;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_rot47
+%ifndef IMPORTED_l10n_help_rot47
+%define IMPORTED_l10n_help_rot47
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_rot47:
+  string cor(LIGHT_BLUE,BLACK), 'ROT47', \
+         cor(LIGHT_GRAY,BLACK), ' calcula senha para um dado usu rio'
+
+%endif ; IMPORTED_l10n_help_rot47
+%endif ; IMPORT_l10n_help_rot47
+
+
+;;;;;;;;;;;;;;;;
+; l10n_help_ver
+;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_ver
+%ifndef IMPORTED_l10n_help_ver
+%define IMPORTED_l10n_help_ver
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_ver:
+  string cor(LIGHT_BLUE,BLACK), 'VER', \
+         cor(LIGHT_GRAY,BLACK), ' exibe informa‡”es sobre o programa'
+
+%endif ; IMPORTED_l10n_help_ver
+%endif ; IMPORT_l10n_help_ver
+
+
+;;;;;;;;;;;;;;;;;
+; l10n_help_help
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_help
+%ifndef IMPORTED_l10n_help_help
+%define IMPORTED_l10n_help_help
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_help:
+  string cor(LIGHT_BLUE,BLACK), 'HELP', \
+         cor(LIGHT_GRAY,BLACK), ' exibe esta mensagem de ajuda'
+
+%endif ; IMPORTED_l10n_help_help
+%endif ; IMPORT_l10n_help_help
+
+
+;;;;;;;;;;;;;;;;;
+; l10n_help_exit
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_help_exit
+%ifndef IMPORTED_l10n_help_exit
+%define IMPORTED_l10n_help_exit
+
+?import cor, LIGHT_BLUE, BLACK, LIGHT_GRAY
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_help_exit:
+  string cor(LIGHT_BLUE,BLACK), 'EXIT', \
+         cor(LIGHT_GRAY,BLACK), ' termina a conex„o'
+
+%endif ; IMPORTED_l10n_help_exit
+%endif ; IMPORT_l10n_help_exit
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_disconnection_messages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_disconnection_messages
+%ifndef IMPORTED_l10n_disconnection_messages
+%define IMPORTED_l10n_disconnection_messages
+
+?import string, array, endarray
+%include "kernel/memory.qdt"
+
+l10n_disconnection_messages:
+  array
+    string "DESCONFIGURANDO PARAMETROS DE CONEXAO"
+    string "FECHANDO VIAS DE CONEXAO"
+    string "RETROAGINDO TERMINAIS INDEPENDENTES"
+    string "LIBERANDO SINAL COMPATIVEL"
+    string "DESALOCANDO BUFFER DE TRANSFERENCIA"
+    string "ABANDONANDO SINAL COMUTAL"
+    string "FINALIZANDO SISTEMAS INTERPRETATIVOS"
+    string "CANCELANDO PREEMPTIVIDADE"
+    string "DESESTABILIZANDO PRIORIDADE DE FLUXO"
+    string "IGNORANDO FONTES INTERFERENTES"
+    string "DESCONECTANDO REDE DIRETA"
+  endarray
+
+%endif ; IMPORTED_l10n_disconnection_messages
+%endif ; IMPORT_l10n_disconnection_messages
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; l10n_bye_message_0
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_bye_message_0
+%ifndef IMPORTED_l10n_bye_message_0
+%define IMPORTED_l10n_bye_message_0
+
+?import cor, RED, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_bye_message_0:
+  string cor(RED,BLACK), 'ATE A PROXIMA'
+
+%endif ; IMPORTED_l10n_bye_message_0
+%endif ; IMPORT_l10n_bye_message_0
+
+
+;;;;;;;;;;;;;;;;;;;;;
+; l10n_bye_message_1
+;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_bye_message_1
+%ifndef IMPORTED_l10n_bye_message_1
+%define IMPORTED_l10n_bye_message_1
+
+?import cor, RED, BLACK, LIGHT_CYAN
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_bye_message_1:
+  string cor(RED,BLACK), 'QUE ', cor(LIGHT_CYAN,BLACK), 'RIS', \
+    cor(RED,BLACK), ' ESTEJA COM VOCE!'
+
+%endif ; IMPORTED_l10n_bye_message_1
+%endif ; IMPORT_l10n_bye_message_1
+
+
+;;;;;;;;;;;;;;;
+; l10n_closing
+;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_closing
+%ifndef IMPORTED_l10n_closing
+%define IMPORTED_l10n_closing
+
+?import bcor, RED, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_closing:
+  string bcor(RED,BLACK), 'FINALIZANDO'
+
+%endif ; IMPORTED_l10n_closing
+%endif ; IMPORT_l10n_closing
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; l10n_connection_closed
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_l10n_connection_closed
+%ifndef IMPORTED_l10n_connection_closed
+%define IMPORTED_l10n_connection_closed
+
+?import cor, RED, BLACK
+%include "kernel/video.qdt"
+
+?import string
+%include "kernel/memory.qdt"
+
+l10n_connection_closed:
+  string cor(RED,BLACK), 'CONEXAO TERMINADA'
+
+%endif ; IMPORTED_l10n_connection_closed
+%endif ; IMPORT_l10n_connection_closed
+
+
+%pop L10N_L10N_QDT
+
+; Local Variables:
+; coding: cp437-dos
+; End:

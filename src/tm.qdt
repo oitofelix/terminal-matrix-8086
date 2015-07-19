@@ -378,6 +378,19 @@ COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
     ?while ==, %$$$char, -1
 
     ?switch %$$$char
+      ?case ==, LOCK_CHAR
+      ?case ==, COVER_CHAR
+      ?case ==, BACKSPACE
+      ?case ==, RETURN
+      ?default
+        ?if ||, <, %$$$$char, 20h, \
+                >, %$$$$char, 7Eh
+          ? drop, call, keyboard_read_char
+          ?continue .read_char
+        ?endif
+    ?endswitch
+
+    ?switch %$$$char
 
       ; LOCK CHAR
       ?case ==, LOCK_CHAR

@@ -446,7 +446,11 @@ COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
       ; BACKSPACE
       ?case ==, BACKSPACE
         ?if ==, %$$$$char_count, 0
-          ? call, speaker_beep, 440, 1
+          ?if %$$$$$secret_mode
+            ? =, %$$$$$secret_mode, FALSE
+          ?else
+            ? call, speaker_beep, 440, 1
+          ?endif
           ? drop, call, keyboard_read_char
           ?continue .read_char
         ?endif
@@ -463,7 +467,7 @@ COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ? call, video_draw_char, ' ', %$$$color, 1
 
         ?if ==, %$$$$char_count, 0
-          ? =, %$$$$secret_mode, 0
+          ? =, %$$$$secret_mode, FALSE
           ? =, %$$$$direction, 0
           ? =, %$$$$cover_buffer_i, 0
           ? =, %$$$$answer_buffer_i, 0

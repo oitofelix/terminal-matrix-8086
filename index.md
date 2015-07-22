@@ -17,12 +17,12 @@ base: http://oitofelix.github.io
 __Terminal Matrix__ is a very mysterious program.  It's said that it
 was given to mankind in a spontaneous form of divine inspiration and
 cybernetic insight.  Rumor has it that few people in the entire world
-are able to master and use this program.  Some say, in a expression of
-dubious lucidity, that only the chosen ones can really do it.  There
-are a handful reports of very skilled hackers that were able to crack
-_TM_'s source code and understand the truth that has never been seen
-before, and unlock its full potential.  The only truth known for sure,
-though, is that much is said, but little is known.
+are able to master and use this program.  Some say, in an expression
+of dubious lucidity, that only the chosen ones can really do it.
+There are a handful reports of very skilled hackers that were able to
+crack _TM_'s source code and understand the truth that has never been
+seen before, and unlock its full potential.  The only truth known for
+sure, though, is that much is said, but little is known.
 
 The most astonishing fact about _TM_ is that, believe you or not, it's
 designed to establish an inter-dimensional connection to an

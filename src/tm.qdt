@@ -168,6 +168,8 @@ SECTION .bss
   ? call, video_draw_str_vhcent, l10n_welcome_message_1, bcolor(RED,BLACK)
   ? call, timer_sleep, timer_seconds2ticks(1)
 
+  ? call, keyboard_flush_buffer
+
   ? call, video_cls
   ? call, draw_logo
   ? call, video_next_row

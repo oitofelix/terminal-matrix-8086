@@ -329,8 +329,8 @@ SECTION .bss
 %ifndef IMPORTED_read_question
 %define IMPORTED_read_question
 
-?import LOCK_CHAR, tm_lock, COVER_RESISTENCE, COVER_CHAR, \
-COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
+?import LOCK_CHAR, EMERGENCY_CHAR, tm_lock, COVER_RESISTENCE, \
+COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
 %include "src/tm.qdt"
 
 ?import video_enable_cursor, video_prev_col, vide_next_col, \
@@ -381,6 +381,7 @@ COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
 
     ?switch %$$$char
       ?case ==, LOCK_CHAR
+      ?case ==, EMERGENCY_CHAR
       ?case ==, COVER_CHAR
       ?case ==, BACKSPACE
       ?case ==, RETURN
@@ -403,6 +404,12 @@ COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ?endif
         ? =, [tm_lock], !, [tm_lock]
         ? call, keyboard_flush_buffer_from_char, LOCK_CHAR
+
+      ; EMERGENCY CHAR
+      ?case ==, EMERGENCY_CHAR
+          ? =, %$$$secret_mode, FALSE
+          ? =, %$$$answer_buffer_i, 0
+          ? call, keyboard_flush_buffer_from_char, EMERGENCY_CHAR
 
       ; COVER CHAR
       ?case ==, COVER_CHAR
@@ -558,6 +565,20 @@ LOCK_CHAR equ 0Ch
 
 %endif ; IMPORTED_LOCK_CHAR
 %endif ; IMPORT_LOCK_CHAR
+
+
+;;;;;;;;;;;;;;;;;
+; EMERGENCY_CHAR
+;;;;;;;;;;;;;;;;;
+
+%ifdef IMPORT_EMERGENCY_CHAR
+%ifndef IMPORTED_EMERGENCY_CHAR
+%define IMPORTED_EMERGENCY_CHAR
+
+EMERGENCY_CHAR equ 05h
+
+%endif ; IMPORTED_EMERGENCY_CHAR
+%endif ; IMPORT_EMERGENCY_CHAR
 
 
 ;;;;;;;;;;;;

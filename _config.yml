@@ -1,0 +1,3 @@
+baseurl: /terminal-matrix-8086
+highlighter: pygments
+exclude: ['platforms', 'plugins']

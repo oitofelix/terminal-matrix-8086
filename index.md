@@ -182,5 +182,15 @@ and _VGA_ (50 rows), respectively.
   <img src="{{ page.base_local }}{{ site.baseurl }}/tm-vga.png">
 </figure>
 
+_TM_ includes a Matrix decimal decoder that you can invoke by the
+command `DCMATRIX`.  It has been isolated as a standalone program
+called [DeciMatrix 8086](/decimatrix-8086).
+
+<figure>
+  <figcaption style="border: 2px solid green;">DeciMatrix 8086</figcaption>
+  <img style="border: 2px solid green;" src="{{ page.base_local }}{{ site.baseurl }}/decimatrix.png">
+</figure>
+
+
 
 </div>

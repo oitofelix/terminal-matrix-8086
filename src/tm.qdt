@@ -260,8 +260,8 @@ SECTION .bss
 
 ?func draw_logo
   ? call, video_setpos, 0, 0
-  ?switch [video_rows]
-    ?case ==, 25
+  ?switch
+    ?case ==, 25, [video_rows]
       ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, \
           dec, +, call, memory_strheight, picture_logo_t_cga, \
                   call, memory_strheight, picture_logo_m_cga
@@ -269,7 +269,7 @@ SECTION .bss
       ? call, video_draw_str_hcent, picture_logo_t_cga, color(GREEN,BLACK)
       ? call, video_next_row
       ? call, video_draw_str_hcent, picture_logo_m_cga, color(LIGHT_GREEN,BLACK)
-    ?case ==, 43
+    ?case ==, 43, [video_rows]
       ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, \
           dec, +, call, memory_strheight, picture_logo_t_ega, \
                   call, memory_strheight, picture_logo_m_ega
@@ -277,7 +277,7 @@ SECTION .bss
       ? call, video_draw_str_hcent, picture_logo_t_ega, color(GREEN,BLACK)
       ? call, video_next_row
       ? call, video_draw_str_hcent, picture_logo_m_ega, color(LIGHT_GREEN,BLACK)
-    ?case ==, 50
+    ?case ==, 50, [video_rows]
       ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, \
           dec, +, call, memory_strheight, picture_logo_t_vga, \
                   call, memory_strheight, picture_logo_m_vga
@@ -379,12 +379,12 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
       ?endif
     ?while ==, %$$$char, -1
 
-    ?switch %$$$char
-      ?case ==, LOCK_CHAR
-      ?case ==, EMERGENCY_CHAR
-      ?case ==, COVER_CHAR
-      ?case ==, BACKSPACE
-      ?case ==, RETURN
+    ?switch
+      ?case ==, LOCK_CHAR, %$$$char
+      ?case ==, EMERGENCY_CHAR, %$$$char
+      ?case ==, COVER_CHAR, %$$$char
+      ?case ==, BACKSPACE, %$$$char
+      ?case ==, RETURN, %$$$char
       ?default
         ?if ||, <, %$$$$char, 20h, \
                 >, %$$$$char, 7Eh
@@ -393,10 +393,10 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ?endif
     ?endswitch
 
-    ?switch %$$$char
+    ?switch
 
       ; LOCK CHAR
-      ?case ==, LOCK_CHAR
+      ?case ==, LOCK_CHAR, %$$$char
         ?if ||, !=, %$$$$char_count, 0, \
                 %$$$$secret_mode
           ? drop, call, keyboard_read_char
@@ -406,13 +406,13 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ? call, keyboard_flush_buffer_from_char, LOCK_CHAR
 
       ; EMERGENCY CHAR
-      ?case ==, EMERGENCY_CHAR
+      ?case ==, EMERGENCY_CHAR, %$$$char
           ? =, %$$$secret_mode, FALSE
           ? =, %$$$answer_buffer_i, 0
           ? call, keyboard_flush_buffer_from_char, EMERGENCY_CHAR
 
       ; COVER CHAR
-      ?case ==, COVER_CHAR
+      ?case ==, COVER_CHAR, %$$$char
         ?if [tm_lock]
           ? drop, call, keyboard_read_char
           ?continue .read_char
@@ -453,7 +453,7 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ? call, keyboard_flush_buffer_from_char, COVER_CHAR
 
       ; BACKSPACE
-      ?case ==, BACKSPACE
+      ?case ==, BACKSPACE, %$$$char
         ?if ==, %$$$$char_count, 0
           ?if %$$$$$secret_mode
             ? =, %$$$$$secret_mode, FALSE
@@ -485,7 +485,7 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ? drop, call, keyboard_read_char
 
       ; RETURN
-      ?case ==, RETURN
+      ?case ==, RETURN, %$$$char
         ?if %$$$$secret_mode
           ? drop, call, keyboard_read_char
           ?continue .read_char
@@ -906,12 +906,12 @@ tm_cmdtable:
    ? call, video_next_row
    ? call, video_next_row
 
-   ?switch [video_rows]
-     ?case ==, 25
+   ?switch
+     ?case ==, 25, [video_rows]
        ? call, video_draw_str_hcent, picture_author_cga, %$$color
-     ?case ==, 43
+     ?case ==, 43, [video_rows]
        ? call, video_draw_str_hcent, picture_author_ega, %$$color
-     ?case ==, 50
+     ?case ==, 50, [video_rows]
        ? call, video_draw_str_hcent, picture_author_vga, %$$color
    ?endswitch
    ? call, video_next_row

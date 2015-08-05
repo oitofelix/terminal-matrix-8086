@@ -113,7 +113,7 @@ SECTION .bss
   ? call, video_init
   ? call, timer_sleep, 2
   ? call, video_disable_cursor
-  ? call, video_blink_mode, TRUE
+  ? call, video_blink_mode, ?TRUE
   ? call, keyboard_mindelay_maxrate
 
   ? call, video_select_page, 0
@@ -122,7 +122,7 @@ SECTION .bss
   ? call, video_draw_str_vhcent, l10n_loading, bcolor(GREEN,BLACK)
   ? call, timer_sleep, timer_seconds2ticks(5)
 
-  .login: ?while TRUE
+  .login: ?while ?TRUE
     ? call, video_setrow_cent
     ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), -1, 1
     ? call, keyboard_flush_buffer
@@ -168,8 +168,6 @@ SECTION .bss
   ? call, video_draw_str_vhcent, l10n_welcome_message_1, bcolor(RED,BLACK)
   ? call, timer_sleep, timer_seconds2ticks(1)
 
-  ? call, keyboard_flush_buffer
-
   ? call, video_cls
   ? call, draw_logo
   ? call, video_next_row
@@ -177,7 +175,8 @@ SECTION .bss
   ? =, [video_win_rows], inc, -, [video_win_maxrow], [video_win_minrow]
   ? =, [logo_mode_minrow], [video_win_minrow]
 
-  ?while TRUE
+  ?while ?TRUE
+    ? call, keyboard_flush_buffer
     ? call, draw_user_prompt
     ?if ==, 0, call, read_question, answer_buffer, cmd_buffer, \
                  cover_buffer, l10n_questions, color(GREEN,BLACK)
@@ -193,12 +192,12 @@ SECTION .bss
 
       ; sending
       ? call, video_draw_str, l10n_sending_message, color(LIGHT_GREEN,BLACK)
-      ? call, progbar_draw_r, 6, timer_seconds2ticks(5), NULL, NULL, 0
+      ? call, progbar_draw_r, 6, timer_seconds2ticks(5), ?NULL, ?NULL, 0
 
       ; receiving
       ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, 0
       ? call, video_draw_str, l10n_receiving_message, color(LIGHT_GREEN,BLACK)
-      ? call, progbar_draw_r, 6, timer_seconds2ticks(5), NULL, NULL, 0
+      ? call, progbar_draw_r, 6, timer_seconds2ticks(5), ?NULL, ?NULL, 0
 
       ; response
       ? call, video_draw_char_hfull, ' ', color(GREEN,BLACK), 0, 0
@@ -362,19 +361,19 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
     %$answer_buffer_i, %$cmd_buffer_i
 
   ? call, video_enable_cursor
-  ? =, %$secret_mode, FALSE
+  ? =, %$secret_mode, ?FALSE
   ? =, %$char_count, 0
   ? =, %$direction, 0
   ? =, %$cover_buffer_i, 0
   ? =, %$answer_buffer_i, 0
   ? =, %$cmd_buffer_i, 0
 
-  .read_char: ?while TRUE
+  .read_char: ?while ?TRUE
     ? call, timer_alarm, timer_seconds2ticks(90)
     ?do
       ? =, %$$$char, call, keyboard_check_char
       ?if call, timer_alarm, 0
-        ? call, cmd_dcmatrix, NULL
+        ? call, cmd_dcmatrix, ?NULL
         ?continue .read_char
       ?endif
     ?while ==, %$$$char, -1
@@ -407,7 +406,7 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
 
       ; EMERGENCY CHAR
       ?case ==, EMERGENCY_CHAR, %$$$char
-          ? =, %$$$secret_mode, FALSE
+          ? =, %$$$secret_mode, ?FALSE
           ? =, %$$$answer_buffer_i, 0
           ? call, keyboard_flush_buffer_from_char, EMERGENCY_CHAR
 
@@ -419,7 +418,7 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ?endif
 
         ?if %$$$$secret_mode
-          ? =, %$$$$secret_mode, FALSE
+          ? =, %$$$$secret_mode, ?FALSE
           ? =, %$$$$direction, 0
           ? @byte=, +, %$$$$answer_buffer, %$$$$answer_buffer_i, END
           ? drop, call, keyboard_read_char
@@ -449,14 +448,14 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
           ? +=, %$$$$cover_buffer_i, call, memory_strlen, %$$$$string
         ?next ++, %$$$$i
         ? =, %$$$cover_buffer_i, 0
-        ? =, %$$$secret_mode, TRUE
+        ? =, %$$$secret_mode, ?TRUE
         ? call, keyboard_flush_buffer_from_char, COVER_CHAR
 
       ; BACKSPACE
       ?case ==, BACKSPACE, %$$$char
         ?if ==, %$$$$char_count, 0
           ?if %$$$$$secret_mode
-            ? =, %$$$$$secret_mode, FALSE
+            ? =, %$$$$$secret_mode, ?FALSE
           ?else
             ? call, speaker_beep, 440, 1
           ?endif
@@ -476,7 +475,7 @@ COVER_CHAR, COVER_BUFFER_SIZE, ANSWER_BUFFER_SIZE, cmd_dcmatrix
         ? call, video_draw_char, ' ', %$$$color, 1
 
         ?if ==, %$$$$char_count, 0
-          ? =, %$$$$secret_mode, FALSE
+          ? =, %$$$$secret_mode, ?FALSE
           ? =, %$$$$direction, 0
           ? =, %$$$$cover_buffer_i, 0
           ? =, %$$$$answer_buffer_i, 0
@@ -589,7 +588,7 @@ EMERGENCY_CHAR equ 05h
 %ifndef IMPORTED_logo_mode
 %define IMPORTED_logo_mode
 
-logo_mode dw TRUE
+logo_mode dw ?TRUE
 
 %endif ; IMPORTED_logo_mode
 %endif ; IMPORT_logo_mode
@@ -617,7 +616,7 @@ logo_mode_minrow dw 0000h
 %ifndef IMPORTED_tm_lock
 %define IMPORTED_tm_lock
 
-tm_lock dw TRUE
+tm_lock dw ?TRUE
 
 %endif ; IMPORTED_tm_lock
 %endif ; IMPORT_tm_lock
@@ -750,13 +749,15 @@ program_site:
 ?import string
 %include "kernel/memory.qdt"
 
-?import cor, LIGHT_MAGENTA, BLACK, MAGENTA, DARK_GRAY, BROWN
+?import cor, LIGHT_MAGENTA, BLACK, MAGENTA, DARK_GRAY, BROWN, \
+	LIGHT_BLUE
 %include "kernel/video.qdt"
 
 program_build_info:
     string cor(LIGHT_MAGENTA,BLACK), __UTC_DATE__, ' ', \
            cor(MAGENTA,BLACK), __UTC_TIME__, cor(DARK_GRAY,BLACK), \
-           ' (UTC) ', cor(BROWN,BLACK), 'NASM ', __NASM_VER__
+        ' (UTC) ', cor(BROWN,BLACK), 'NASM ', __NASM_VER__, \
+	cor(LIGHT_BLUE,BLACK), ' QDot86 ', ?version
 
 %endif ; IMPORTED_program_build_info
 %endif ; IMPORT_program_build_info
@@ -1157,7 +1158,7 @@ video_pos, video_setpos, video_next_row
 
 ?func cmd_dcmatrix, %$cmd_args
   ? call, video_select_page, 2
-  ? call, scrnsvr_dcmatrix, FALSE
+  ? call, scrnsvr_dcmatrix, ?FALSE
   ? call, video_select_page, 0
 ?endfunc
 

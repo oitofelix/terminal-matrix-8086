@@ -62,10 +62,11 @@ Portuguese_.  You can download its binaries below.
 - [TM86 1.0 EN-US]({{ page.base_local }}{{ site.baseurl }}/tm-en-us.com)
 - [TM86 1.0 PT-BR]({{ page.base_local }}{{ site.baseurl }}/tm-pt-br.com)
 
-_TM_ is free software and you can obtain its source code here.  It
-requires [NASM](http://www.nasm.us/), _The Netwide Assembler_, in
-order to be built, and [GNU Make](http://www.gnu.org/software/make/)
-to automate that process.
+_TM_ is free software under _GPLv3+_ and you can obtain its source
+code here.  It requires [NASM](http://www.nasm.us/), _The Netwide
+Assembler_, in order to be built, and
+[GNU Make](http://www.gnu.org/software/make/) to automate that
+process.
 
 - [TM86 1.0]({{ page.base_local }}{{ site.baseurl }}/terminal-matrix-8086-1.0.tar.gz)
 - [VCS repository](http://github.com/oitofelix/terminal-matrix-8086/)

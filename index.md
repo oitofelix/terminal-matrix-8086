@@ -193,5 +193,10 @@ called [DeciMatrix 8086](/decimatrix-8086).
 </figure>
 
 
+### Contact
+
+You can discuss about _TM_ with other users at its
+[#TM86](irc://chat.freenode.net/TM86) IRC channel.
+
 
 </div>

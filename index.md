@@ -56,6 +56,12 @@ feats are technologically achievable.
 - [TM86 at FSF's Free Software Directory](http://directory.fsf.org/wiki/Terminal_Matrix_8086)
 
 
+### Contact
+
+You can discuss about _TM_ with other users at its
+[#TM86](irc://chat.freenode.net/TM86) IRC channel.
+
+
 ### Download
 
 _TM_ is available in two languages: _American English_ and _Brazilian
@@ -193,12 +199,6 @@ called [DeciMatrix 8086](/decimatrix-8086).
   <figcaption style="border: 2px solid green;">DeciMatrix 8086</figcaption>
   <img style="border: 2px solid green;" src="{{ page.base_local }}{{ site.baseurl }}/decimatrix.png">
 </figure>
-
-
-### Contact
-
-You can discuss about _TM_ with other users at its
-[#TM86](irc://chat.freenode.net/TM86) IRC channel.
 
 
 </div>

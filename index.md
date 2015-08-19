@@ -54,6 +54,7 @@ skeptical people, because no one can explain how this program's great
 feats are technologically achievable.
 
 - [TM86 at FSF's Free Software Directory](http://directory.fsf.org/wiki/Terminal_Matrix_8086)
+- [#TM86 IRC channel](irc://chat.freenode.net/TM86)
 
 
 ### Download
@@ -72,12 +73,6 @@ process.
 
 - [TM86 1.0]({{ page.base_local }}{{ site.baseurl }}/terminal-matrix-8086-1.0.tar.gz)
 - [VCS repository](http://github.com/oitofelix/terminal-matrix-8086/)
-
-
-### Contact
-
-You can discuss about _TM_ with other users at its
-[#TM86](irc://chat.freenode.net/TM86) IRC channel.
 
 
 ### Run

@@ -53,6 +53,9 @@ all!  Those almost insanely modest requirements blow the minds of
 skeptical people, because no one can explain how this program's great
 feats are technologically achievable.
 
+- [TM86 at FSF's Free Software Directory](http://directory.fsf.org/wiki/Terminal_Matrix_8086)
+- [#TM86 IRC channel](irc://chat.freenode.net/TM86)
+
 
 ### Download
 
@@ -191,7 +194,6 @@ called [DeciMatrix 8086](/decimatrix-8086).
   <figcaption style="border: 2px solid green;">DeciMatrix 8086</figcaption>
   <img style="border: 2px solid green;" src="{{ page.base_local }}{{ site.baseurl }}/decimatrix.png">
 </figure>
-
 
 
 </div>

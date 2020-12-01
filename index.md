@@ -145,9 +145,9 @@ To get a feel of how _TM_ looks like, a video of a session recorded in
 _DOSBox_, specifically for this purpose, has been made available.
 Enjoy!
 
-<video controls>
-  <source src="{{ page.base_local }}{{ site.baseurl }}/tm.mp4" type="video/mp4">
-</video>
+<a target="_blank" href="https://www.youtube.com/watch?v=myfEqUiTfWg">
+    <img src="https://img.youtube.com/vi/myfEqUiTfWg/0.jpg" alt="Terminal Matrix 8086" />
+</a>
 
 <div style="text-align: center;" markdown="1">
 [Original recording]({{ page.base_local }}{{ site.baseurl }}/tm.avi)

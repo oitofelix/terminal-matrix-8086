@@ -149,6 +149,10 @@ Enjoy!
     <img src="https://img.youtube.com/vi/myfEqUiTfWg/0.jpg" alt="Terminal Matrix 8086" />
 </a>
 
+<!-- <video controls> -->
+<!--   <source src="{{ page.base_local }}{{ site.baseurl }}/tm.mp4" type="video/mp4"> -->
+<!-- </video> -->
+
 <!-- <div style="text-align: center;" markdown="1"> -->
 <!-- [Original recording]({{ page.base_local }}{{ site.baseurl }}/tm.avi) -->
 <!-- </div> -->
